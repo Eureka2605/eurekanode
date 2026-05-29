@@ -3585,7 +3585,9 @@ function handleCanvasMoveV68(e){
     if(visualView==='matrix' || e.shiftKey){
       tCamX-=dx/camZ;tCamY-=dy/camZ;
     }else{
-      tRotY+=dx*.006;
+      // V180: keep Galaxy's original 3D rotation behavior,
+      // but invert only the horizontal yaw direction for more intuitive left/right drag.
+      tRotY-=dx*.006;
       tRotX=Math.max(-1.05,Math.min(.45,tRotX+dy*.006));
     }
     _snapView();
@@ -4126,7 +4128,7 @@ canvas{image-rendering:auto;contain:strict;}
       ['legend-title','GUIDE'],['legend-core','Center = future / speculative core'],['legend-reality','Outer layer = real technologies / society'],
       ['legend-same','Same world / same layer link'],['legend-bridge','Reality ↔ speculative bridge'],['legend-groups-title','SUPER GROUPS'],
       ['legend-groups','Tech & Intelligence / Life & Medicine / Space, Physics & Environment / Society, Politics & Ideology / Economy, Culture & Life / Risk & Security'],
-      ['legend-controls','Wheel zoom · drag 3D rotation · Shift+drag pan · click to read link structure'],
+      ['legend-controls','Wheel zoom · drag 3D rotation · Shift+drag full pan · click to read link structure'],
       ['detail-inline-cue-text','Read more'],['pt-add','Add Node'],['pt-filter','Category Filter'],['pt-detail','Node Detail'],
       ['dsec-desc','Description'],['dsec-structure','Connection Structure'],['dsec-connected','Connected Nodes']
     ];
@@ -6247,7 +6249,7 @@ body.dark-ui #detail-float-more:hover{background:rgba(30,41,59,.98)!important;co
       safeText('legend-bridge',uiLang==='en'?'Reality ↔ imagination bridge':'현실↔상상 전이 브리지');
       safeText('legend-groups-title',uiLang==='en'?'SUPER GROUPS':'상위 그룹');
       safeText('legend-groups',uiLang==='en'?'Tech & Intelligence / Life & Medicine / Space, Physics & Environment / Society, Politics & Ideology / Economy, Culture & Life / Risk & Security':'기술·지능 / 생명·의료 / 우주·물리·환경 / 사회·정치·이념 / 경제·문화·생활 / 위험·안보');
-      safeHTML('legend-controls',uiLang==='en'?'Wheel zoom · Drag 3D rotate<br>Shift+drag pan · Middle-drag pan · Click node detail':'스크롤 확대 · 드래그 3D 회전<br>Shift+드래그 이동 · 가운데 버튼 이동 · 클릭 시 상세');
+      safeHTML('legend-controls',uiLang==='en'?'Wheel zoom · Drag 3D rotate<br>Shift+drag full pan · Middle-drag pan · Click node detail':'스크롤 확대 · 드래그 3D 회전<br>Shift+드래그 전체 이동 · 가운데 버튼 이동 · 클릭 시 상세');
     }
     const bt=document.getElementById('legend-toggle');
     if(bt){
@@ -6994,7 +6996,7 @@ body.dark-ui #v81-legend-toggle:hover{background:#e5edf7;color:#0f172a;border-co
       gb.className='v81-groups-body';
       gb.innerHTML='<span class="v81-ko-line">기술·지능 / 생명·의료 / 우주·물리·환경</span><span class="v81-ko-line">사회·정치·이념 / 경제·문화·생활 / 위험·안보</span>';
     }
-    q('.v81-controls',el).innerHTML=tr('휠 확대 · 드래그 3D 회전<br>Shift+드래그 이동 · 클릭 시 상세','Wheel zoom · Drag rotate<br>Shift+drag pan · Click detail');
+    q('.v81-controls',el).innerHTML=tr('휠 확대 · 드래그 3D 회전<br>Shift+드래그 전체 이동 · 클릭 시 상세','Wheel zoom · Drag rotate<br>Shift+drag full pan · Click detail');
     const btn=q('#v81-legend-toggle',el);
     const label=legendCollapsed||isTable?tr('가이드 펼치기','Expand guide'):tr('가이드 접기','Collapse guide');
     btn.textContent=legendCollapsed||isTable?'⌃':'⌄';
@@ -14677,6 +14679,14 @@ body.dark-ui #storybox .st-btn:not(.primary):not(#st-next):hover{
 <style id="v178-galaxy-matrix-perf-note">
 /* V178 performance pass: cached frame geometry, sparse springs, adjacency edge drawing,
    and cached Matrix order. v177 remains the rollback checkpoint if needed. */
+</style>
+
+
+
+<style id="v180-galaxy-yaw-direction-inverted-note">
+/* V180: Galaxy plain mouse drag keeps 3D rotation.
+   Only horizontal yaw direction is inverted: tRotY -= dx*.006.
+   Shift+drag remains full pan; Matrix drag remains pan. */
 </style>
 
 </body>
